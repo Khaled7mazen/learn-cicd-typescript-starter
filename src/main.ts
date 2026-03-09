@@ -10,7 +10,6 @@ import { handlerUsersCreate, handlerUsersGet } from "./api/users.js";
 
 const __dirname = path.resolve();
 
-
 if (!config.api.port) {
   console.error("PORT environment variable is not set");
   process.exit(1);
@@ -48,5 +47,3 @@ app.use("/v1", v1Router);
 app.listen(config.api.port, () => {
   console.log(`Server is running on port: ${config.api.port}`);
 });
-
-
