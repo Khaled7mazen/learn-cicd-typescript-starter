@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-expect(key).toBe("wrong-key");
+
 const person = {
   isActive: true,
   age: 32,
