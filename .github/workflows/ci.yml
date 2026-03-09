@@ -18,6 +18,5 @@ jobs:
         with:
           node-version: 22
 
-      -
- name: Print Node version
+      - name: Print Node version
         run: node --version
