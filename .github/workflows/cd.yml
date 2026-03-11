@@ -14,29 +14,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ إعداد Node.js
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22
 
-      # 3️⃣ تثبيت dependencies
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 4️⃣ Build التطبيق
+      # 4️⃣ Build app
       - name: Build app
         run: npm run build
 
-      # 5️⃣ تفعيل gcloud مع Service Account
-      - name: Authenticate gcloud
-        run: |
-          printf '%s' "${{ secrets.GCP_CREDENTIALS }}" > key.json
-          gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project notely-489803
-          gcloud config set compute/region us-central1
+      # 5️⃣ Authenticate gcloud using secret directly
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: notely-489803
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
 
-      # 6️⃣ Build وPush Docker image
+      # 6️⃣ Build & push Docker image
       - name: Build and push Docker image with Cloud Build
         run: |
           gcloud builds submit \
