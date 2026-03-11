@@ -31,8 +31,8 @@ jobs:
       # 5️⃣ تفعيل gcloud مع Service Account
       - name: Authenticate gcloud
         run: |
-          echo "${{ secrets.GCP_CREDENTIALS }}" > $GITHUB_WORKSPACE/key.json
-          gcloud auth activate-service-account --key-file=$GITHUB_WORKSPACE/key.json
+          printf '%s' "${{ secrets.GCP_CREDENTIALS }}" > key.json
+          gcloud auth activate-service-account --key-file=key.json
           gcloud config set project notely-489803
           gcloud config set compute/region us-central1
 
