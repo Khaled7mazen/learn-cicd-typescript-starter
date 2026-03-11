@@ -6,31 +6,37 @@ on:
 
 jobs:
   Deploy:
-    name: Deploy
+    name: Deploy to GCP
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout الكود
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2️⃣ إعداد Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22
 
+      # 3️⃣ تثبيت dependencies
       - name: Install dependencies
         run: npm ci
 
+      # 4️⃣ Build التطبيق
       - name: Build app
         run: npm run build
 
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: notely-489803
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          export_default_credentials: true
+      # 5️⃣ تفعيل gcloud مع Service Account
+      - name: Authenticate gcloud
+        run: |
+          echo "${{ secrets.GCP_CREDENTIALS }}" > $GITHUB_WORKSPACE/key.json
+          gcloud auth activate-service-account --key-file=$GITHUB_WORKSPACE/key.json
+          gcloud config set project notely-489803
+          gcloud config set compute/region us-central1
 
+      # 6️⃣ Build وPush Docker image
       - name: Build and push Docker image with Cloud Build
         run: |
           gcloud builds submit \
